@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miluo.bookman.mapper.BookAndNameMapper">
+  <resultMap id="BaseResultMap" type="com.miluo.bookman.entity.BookAndName">
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="book_id" jdbcType="INTEGER" property="bookId" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <insert id="insert" parameterType="com.miluo.bookman.entity.BookAndName">
+    insert into bookandreader (student_id, book_id, time
+      )
+    values (#{studentId,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, NOW()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.miluo.bookman.entity.BookAndName">
+    insert into bookandreader
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null">
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <delete id="deletereader" parameterType="java.lang.Integer">
+
+        DELETE FROM bookandreader WHERE book_id = #{book_id}
+
+</delete>
+
+
+  <select id="showbook" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    SELECT * FROM bookandreader WHERE student_id = #{reader_id,jdbcType=INTEGER}
+
+</select>
+
+</mapper>
