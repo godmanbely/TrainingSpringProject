@@ -4,6 +4,7 @@ package com.miluo.bookman.controller;
 
 import com.miluo.bookman.mapper.BookAndNameMapper;
 import com.miluo.bookman.service.bookandreaderservice;
+import com.miluo.bookman.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class readercontroller {
         输出为：能否借书成功
      */
     @RequestMapping("borrowbook/{reader_id}/{book_id}")
-    public String GetBook(@PathVariable("reader_id") Integer reader_id, @PathVariable("book_id") Integer book_id){
+    public Result GetBook(@PathVariable("reader_id") Integer reader_id, @PathVariable("book_id") Integer book_id){
              return bookandreaderservice.insert(reader_id,book_id);
     }
 
@@ -30,7 +31,7 @@ public class readercontroller {
            输出为：还书是否成功
     */
     @RequestMapping("releasebook/{reader_id}/{book_id}")
-    public String ReleaseBook(@PathVariable("reader_id") Integer reader_id, @PathVariable("book_id") Integer book_id){
+    public Result ReleaseBook(@PathVariable("reader_id") Integer reader_id, @PathVariable("book_id") Integer book_id){
                return bookandreaderservice.delete(reader_id,book_id);
     }
     /*

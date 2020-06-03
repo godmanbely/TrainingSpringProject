@@ -6,12 +6,15 @@ import com.miluo.bookman.entity.Reader;
 import com.miluo.bookman.mapper.BookAndNameMapper;
 import com.miluo.bookman.mapper.BookMapper;
 import com.miluo.bookman.mapper.ReaderMapper;
+import com.miluo.bookman.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+/*
+ 100 该书不存在
+ */
 @Service
 @Transactional
 public class bookandreaderservice {
@@ -22,15 +25,15 @@ public class bookandreaderservice {
     @Autowired
     ReaderMapper readerMapper;
 
-    public String insert(Integer reader_id, Integer book_id) {
+    public Result insert(Integer reader_id, Integer book_id) {
         Book book = bookMapper.selectByPrimaryKey(book_id);
         if (book == null){
-            return new StringBuffer("该书不存在").toString();
+            return new Result(100,"该书不存在");
         }
         Reader reader = readerMapper.selectByPrimaryKey(reader_id);
 
         if (reader.getCount() >= 5 || book.getBorrowflag() == 1) {
-            return new StringBuffer("超过借书数量或书已经被借出").toString();
+            return new Result(101,"超过借书数量或书已经被借出");
         } else {
             book.setBorrowflag(1);
             reader.setCount(reader.getCount() + 1);
@@ -38,28 +41,28 @@ public class bookandreaderservice {
             readerMapper.updateByPrimaryKey(reader);
             BookAndName bookAndName = new BookAndName(reader_id, book_id);
             bookAndNameMapper.insert(bookAndName);
-            return new StringBuffer("借书成功").toString();
+            return  new Result(200,"借书成功");
         }
     }
 
-    public String delete(Integer reader_id, Integer book_id) {
+    public Result delete(Integer reader_id, Integer book_id) {
         Book book = bookMapper.selectByPrimaryKey(book_id);
         if (book == null){
-            return new StringBuffer("该书不存在").toString();
+            return new Result(100,"该书不存在");
         }
         Reader reader = readerMapper.selectByPrimaryKey(reader_id);
         if (reader.getCount() == 0) {
-            return new StringBuffer("您没有借过书").toString();
+            return new Result(103,"您没有借过书");
         } else {
             int flag = bookAndNameMapper.deletereader(reader_id, book_id);
             if (flag == 0) {
-                return new StringBuffer("没有借该书").toString();
+                return new Result(104,"没有借该书");
             } else {
                 book.setBorrowflag(0);
                 reader.setCount(reader.getCount() - 1);
                 bookMapper.updateByPrimaryKey(book);
                 readerMapper.updateByPrimaryKey(reader);
-                return new StringBuffer("还书成功").toString();
+                return new Result(204,"还书成功");
             }
         }
     }
